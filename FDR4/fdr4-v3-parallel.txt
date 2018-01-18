@@ -1,0 +1,165 @@
+transparent normal
+
+M0 = < 1, 9,10,13,15,20,23>
+M1 = < 3, 9,10,13,15,20,24>
+M2 = < 5,27,11,13,16,20,25>
+M3 = < 7,27,11,13,16,20,26>
+M4 = <23,22,17,18,11, 9, 2>
+M5 = <24,22,17,18,11, 9, 4>
+M6 = <25,22,17,18,12,27, 6>
+M7 = <26,22,17,18,12,27, 8>
+
+----- region A: train constraints ------
+A0 = <0, 0, 0, 1, 0,-1, 0>
+A1 = <0, 0, 0, 1, 0,-1, 0>
+A2 = <0, 0, 1,-1, 0, 1, 0>
+A3 = <0, 0, 1,-1, 0, 0, 0>
+A4 = <0, 1, 0, 0, 0,-1, 0>
+A5 = <0, 1, 0, 0, 0,-1, 0>
+A6 = <1, 0, 0, 0,-1, 0, 0>
+A7 = <0, 1, 0, 0,-1, 0, 0>
+----------------------------------------
+LA = 7
+
+----- region B: train constraints ------
+B0 = <0, 0, 0, 1, 0,-1, 0>
+B1 = <0, 0, 0, 1, 0,-1, 0>
+B2 = <0, 0, 1,-1, 0, 0, 0>
+B3 = <0, 0, 1,-1, 0, 1, 0>
+B4 = <0, 1, 0, 0, 0,-1, 0>
+B5 = <0, 1, 0, 0, 0,-1, 0>
+B6 = <0, 1, 0, 0,-1, 0, 0>
+B7 = <1, 0, 0, 0,-1, 0, 0>
+----------------------------------------
+LB = 7
+
+
+el(y,x) = if x==0 then head(y) else el(tail(y),x-1)
+
+channel exit:{1..27}
+channel enter:{1..27}.{ -1..1}.{ -1..1}
+channel arrived
+
+        
+-- M0 = < 1, 9,10,13,15,20,23>
+T0(p)=  p <6 & enter!el(M0,p+1)!el(A0,p+1)!el(B0,p+1) ->exit!el(M0,p)  -> T0(p+1)
+        [] p==6 & arrived -> STOP
+  
+-- M1 = < 3, 9,10,13,15,20,24>
+T1(p)=  p <6 & enter!el(M1,p+1)!el(A1,p+1)!el(B1,p+1) ->exit!el(M1,p)  -> T1(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M2 = < 5,27,11,13,16,20,25>
+T2(p)=  p <6 & enter!el(M2,p+1)!el(A2,p+1)!el(B2,p+1) ->exit!el(M2,p)  -> T2(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M3 = < 7,27,11,13,16,20,26>
+T3(p)=  p <6 & enter!el(M3,p+1)!el(A3,p+1)!el(B3,p+1) ->exit!el(M3,p)  -> T3(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M4 = <23,22,17,18,11, 9, 2>
+T4(p)=  p <6 & enter!el(M4,p+1)!el(A4,p+1)!el(B4,p+1) ->exit!el(M4,p)  -> T4(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M5 = <24,22,17,18,11, 9, 4>
+T5(p)=  p <6 & enter!el(M5,p+1)!el(A5,p+1)!el(B5,p+1) ->exit!el(M5,p)  -> T5(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M6 = <25,22,17,18,12,27, 6>
+T6(p)=  p <6 & enter!el(M6,p+1)!el(A6,p+1)!el(B6,p+1) ->exit!el(M6,p)  -> T6(p+1)
+        [] p==6 & arrived -> STOP
+
+-- M7 = <26,22,17,18,12,27, 8>
+T7(p)=  p <6 & enter!el(M7,p+1)!el(A7,p+1)!el(B7,p+1) ->exit!el(M7,p)  -> T7(p+1)
+        [] p==6 & arrived -> STOP
+
+P_enter(x)=
+  exit!x -> P_exit(x)
+
+P_exit(x)=
+  enter!x?a?b -> P_enter(x)
+        
+------------------------
+
+FPLACES = ||| i: union({8..22},{2,4,6,27}) @ P_exit(i)
+
+BPLACES = ||| i: {1,3,5,7,23,24,25,26} @ P_enter(i)
+
+PLACES =  FPLACES ||| BPLACES
+
+------------------------
+--   disable system transitions like  enter -> enter -> exit -> exit and force
+--   each enter to be immediately followed by a exit
+PULSE =
+  enter?x?a?b  -> exit?y -> PULSE
+  
+------------------------
+
+RA(n) = enter?x!0?b -> RA(n) []
+        n >0 & enter?x!-1?b -> RA(n-1) []
+        n<LA & enter?x!1?b -> RA(n+1)
+
+RB(n) = enter?x?a!0 -> RB(n)
+        []
+        n >0 & enter?x?a!-1 -> RB(n-1)
+        []
+        n<LB & enter?x?a!1 -> RB(n+1)
+        
+------------------------
+        
+TRAINS =    T0(0) [|{|arrived|}|] 
+           (T1(0) [|{|arrived|}|] 
+           (T2(0) [|{|arrived|}|] 
+           (T3(0) [|{|arrived|}|] 
+           (T4(0) [|{|arrived|}|] 
+           (T5(0) [|{|arrived|}|] 
+           (T6(0) [|{|arrived|}|]
+            T7(0) ))))))
+
+------------------------
+SYS =  ( PLACES  [|{|exit,enter|}|] PULSE ) 
+           [|{|exit,enter|}|] 
+       ( TRAINS  [|{|enter|}|] ( RA(1) [|{|enter|}|]RB(1) ) )
+       
+-- hide unrelevant channels to improve compression
+ASYS= SYS\{|enter,exit|} 
+
+--  compression is helpful for two verifications
+CSYS = normal(ASYS)
+
+
+SPEC = arrived -> STOP
+
+assert CSYS [FD= SPEC
+assert SPEC [FD= CSYS
+
+--     verfication process :
+--  time ./FDR4.app/Contents/MacOS/refines fd4-v3-parallel.txt
+--
+--  8 trains: 
+--  Result: Passed
+--
+--   using PULSE and NORMAL compression of full system
+--  Constructed 8770009 states and 14267120 transitions
+--  Enumerated to 8770794 states and 14268489 transitions
+--             Mac PRO
+--  real	0m28.190s
+--  user	0m26.868s
+--  sys	    0m1.333s
+--
+---------------------------------------------------------
+--
+--  when LA =8  the second assertion fails withthe counter-example:
+--    ("--reveal-taus" for counter-examples)
+--
+-- Unhidden trace: <enter.9.0.0, exit.1, enter.22.1.1, exit.23, 
+--                  enter.17.0.0, exit.22, enter.27.0.0, exit.5, enter.18.0.0, 
+--                  exit.17, enter.10.0.0, exit.9, enter.11.1.1, exit.27, 
+--                  enter.13.1.1, exit.10, enter.15.0.0, exit.13, enter.22.1.1, 
+--                  exit.24, enter.13.-1.-1, exit.11, enter.16.0.0, exit.13, 
+--                  enter.17.0.0, exit.22, enter.22.1.0, exit.26, enter.9.0.0, 
+--                  exit.3, enter.20.1.0, exit.16, enter.27.0.0, exit.7, 
+--                  enter.10.0.0, exit.9, enter.13.1.1, exit.10, enter.11.1.1, 
+--                  exit.27>
+
+

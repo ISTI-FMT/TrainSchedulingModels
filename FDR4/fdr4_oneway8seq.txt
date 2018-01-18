@@ -1,0 +1,171 @@
+
+
+M0 = < 1, 9,10,13,15,20,23>
+M1 = < 3, 9,10,13,15,20,24>
+M2 = < 5,27,11,13,16,20,25>
+M3 = < 7,27,11,13,16,20,26>
+M4 = <23,22,17,18,11, 9, 2>
+M5 = <24,22,17,18,11, 9, 4>
+M6 = <25,22,17,18,12,27, 6>
+M7 = <26,22,17,18,12,27, 8>
+
+
+  ------ region A: train constraints ------
+A0 = < 0, 0, 0, 1, 0,-1, 0> -- G1
+A1 = < 0, 0, 0, 1, 0,-1, 0> -- R1
+A2 = < 0, 0, 1,-1, 0, 1, 0> -- Y1
+A3 = < 0, 0, 1,-1, 0, 0, 0> -- B1
+A4 = < 0, 1, 0, 0,-1, 0, 0> -- G2
+A5 = < 0, 1, 0, 0,-1, 0, 0> -- R2
+A6 = < 0, 0, 0,-1, 0, 0, 0> -- Y2
+A7 = < 0, 1, 0,-1, 0, 0, 0> -- B2 
+ ------------------------------------------
+
+  ------- region B: train constraints ------
+B0 = < 0, 0, 0, 1, 0,-1, 0> -- G1
+B1 = < 0, 0, 0, 1, 0,-1, 0> -- R1
+B2 = < 0, 0, 1,-1, 0, 0, 0> -- Y1
+B3 = < 0, 0, 1,-1, 0, 1, 0> -- B1
+B4 = < 0, 1, 0, 0,-1, 0, 0> -- G2
+B5 = < 0, 1, 0, 0,-1, 0, 0> -- R2
+B6 = < 0, 1, 0,-1, 0, 0, 0> -- Y2
+B7 = < 0, 0, 0,-1, 0, 0, 0> -- B2
+  ------------------------------------------
+LA = 7
+LB = 7
+
+el(y,x) = if x==0 then head(y) else el(tail(y),x-1)
+
+--channel move:{1..27}.{1..27}.{ -1..1}.{ -1..1}
+channel move
+channel  arrived
+
+AllTrains (P0, P1, P2, P3, P4, P5, P6, P7, RA, RB) = 
+     (P0 < 6 and    --  train0 has not yet reached all the steps of its mission
+      el(T0,P0+1) != el(T1,P1)  and -- next place of train0 not occupied by train1
+      el(T0,P0+1) != el(T2,P2)  and -- next place of train0 not occupied by train2
+      el(T0,P0+1) != el(T3,P3)  and
+      el(T0,P0+1) != el(T4,P4)  and
+      el(T0,P0+1) != el(T5,P5)  and
+      el(T0,P0+1) != el(T6,P6)  and
+      el(T0,P0+1) != el(T7,P7)  and -- next place of train0 not occupied by train7
+      RA + el(A0,P0+1) <= LA and  -- progress of train0 does not saturate RA 
+      RB + el(B0,P0+1) <= LB     -- progress of train0 does not saturate RB
+     )  &
+       move -> AllTrains(P0+1,P1,P2,P3,P4,P5,P6,P7,RA+el(A0,P0+1),RB+el(B0,P0+1))
+     []
+     (P1 < 6 and
+      el(T1,P1+1) != el(T0,P0)  and
+      el(T1,P1+1) != el(T2,P2)  and
+      el(T1,P1+1) != el(T3,P3)  and
+      el(T1,P1+1) != el(T4,P4)  and
+      el(T1,P1+1) != el(T5,P5)  and
+      el(T1,P1+1) != el(T6,P6)  and
+      el(T1,P1+1) != el(T7,P7)  and
+      RA + el(A1,P1+1) <= LA and    
+      RB + el(B1,P1+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1+1,P2,P3,P4,P5,P6,P7,RA+el(A1,P1+1),RB+el(B1,P1+1))
+     []
+     (P2 < 6 and
+      el(T2,P2+1) != el(T0,P0)  and
+      el(T2,P2+1) != el(T1,P1)  and
+      el(T2,P2+1) != el(T3,P3)  and
+      el(T2,P2+1) != el(T4,P4)  and
+      el(T2,P2+1) != el(T5,P5)  and
+      el(T2,P2+1) != el(T6,P6)  and
+      el(T2,P2+1) != el(T7,P7)  and
+      RA + el(A2,P2+1) <= LA and    
+      RB + el(B2,P2+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2+1,P3,P4,P5,P6,P7,RA+el(A2,P2+1),RB+el(B2,P2+1))
+     []
+     (P3 < 6 and
+      el(T3,P3+1) != el(T0,P0)  and
+      el(T3,P3+1) != el(T1,P1)  and
+      el(T3,P3+1) != el(T2,P2)  and
+      el(T3,P3+1) != el(T4,P4)  and
+      el(T3,P3+1) != el(T5,P5)  and
+      el(T3,P3+1) != el(T6,P6)  and
+      el(T3,P3+1) != el(T7,P7)  and
+      RA + el(A3,P3+1) <= LA and    
+      RB + el(B3,P3+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2,P3+1,P4,P5,P6,P7,RA+el(A3,P3+1),RB+el(B3,P3+1))
+     []
+     (P4 < 6 and
+      el(T4,P4+1) != el(T0,P0)  and
+      el(T4,P4+1) != el(T1,P1)  and
+      el(T4,P4+1) != el(T2,P2)  and
+      el(T4,P4+1) != el(T3,P3)  and
+      el(T4,P4+1) != el(T5,P5)  and
+      el(T4,P4+1) != el(T6,P6)  and
+      el(T4,P4+1) != el(T7,P7)  and
+      RA + el(A4,P4+1) <= LA and    
+      RB + el(B4,P4+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2,P3,P4+1,P5,P6,P7,RA+el(A4,P4+1),RB+el(B4,P4+1))
+     []
+     (P5 < 6 and
+      el(T5,P5+1) != el(T0,P0)  and
+      el(T5,P5+1) != el(T1,P1)  and
+      el(T5,P5+1) != el(T2,P2)  and
+      el(T5,P5+1) != el(T3,P3)  and
+      el(T5,P5+1) != el(T4,P4)  and
+      el(T5,P5+1) != el(T6,P6)  and
+      el(T5,P5+1) != el(T7,P7)  and
+      RA + el(A5,P5+1) <= LA and    
+      RB + el(B5,P5+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2,P3,P4,P5+1,P6,P7,RA+el(A5,P5+1),RB+el(B5,P5+1))
+     []
+     (P6 < 6 and
+      el(T6,P6+1) != el(T0,P0)  and
+      el(T6,P6+1) != el(T1,P1)  and
+      el(T6,P6+1) != el(T2,P2)  and
+      el(T6,P6+1) != el(T3,P3)  and
+      el(T6,P6+1) != el(T4,P4)  and
+      el(T6,P6+1) != el(T5,P5)  and
+      el(T6,P6+1) != el(T7,P7)  and
+      RA + el(A6,P6+1) <= LA and    
+      RB + el(B6,P6+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2,P3,P4,P5,P6+1,P7,RA+el(A6,P6+1),RB+el(B6,P6+1))
+     []
+     (P7 < 6 and
+      el(T7,P7+1) != el(T0,P0)  and
+      el(T7,P7+1) != el(T1,P1)  and
+      el(T7,P7+1) != el(T2,P2)  and
+      el(T7,P7+1) != el(T3,P3)  and
+      el(T7,P7+1) != el(T4,P4)  and
+      el(T7,P7+1) != el(T5,P5)  and
+      el(T7,P7+1) != el(T6,P6)  and
+      RA + el(A7,P7+1) <= LA and    
+      RB + el(B7,P7+1) <= LB
+     )  &
+       move -> AllTrains(P0,P1,P2,P3,P4,P5,P6,P7+1,RA+el(A7,P7+1),RB+el(B7,P7+1))
+     []
+     ((P0 == 6) and (P1 ==6) and (P2 ==6) and (P3 ==6)  and 
+      (P4 ==6) and (P5 ==6) and (P6 ==6) and (P7 ==6)
+     ) &
+       arrived -> STOP
+
+--------------------------
+ASYS = AllTrains(0,0,0,0,0,0,0,0, 1,1)\{move}
+--------------------------
+--  compression is helpful for two verifications/visualization
+-- NSYS = normal(ASYS)
+-- assert SPEC [FD= NSYS
+--------------------------
+
+
+--------------------------
+SPEC = arrived -> STOP
+--------------------------
+
+assert SPEC [FD= ASYS
+
+-- -------- verfication process : ---------------
+--  time refines --refinement-storage-file-path swapdir fdr4_oneway8seq.txt
+--
+

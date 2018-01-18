@@ -1,0 +1,261 @@
+module CADP_ONEWAY8SMALL is
+
+------------------------------------------------------------------------------
+
+type Train_Number is
+   range 0 .. 7 of nat
+end type
+
+------------------------------------------------------------------------------
+
+type Train_Mission is
+    array [0 .. 6] of nat
+end type
+
+------------------------------------------------------------------------------
+
+type Train_Constraint is
+    array [0 .. 6] of int -- actually, of range -1 .. 1
+end type
+
+------------------------------------------------------------------------------
+
+channel Movement is
+   (Train : Train_Number)
+end channel
+
+------------------------------------------------------------------------------
+
+process MAIN [MOVE : Movement, ARRIVED : none] is
+   var P0, P1, P2, P3, P4, P5, P6, P7 : nat,
+       RA, RB : int,
+       LA, LB : int,
+       T0, T1, T2, T3, T4, T5, T6, T7 : Train_Mission,
+       A0, A1, A2, A3, A4, A5, A6, A7 : Train_Constraint,
+       B0, B1, B2, B3, B4, B5, B6, B7 : Train_Constraint
+   in
+      P0 := 0;
+      P1 := 0;
+      P2 := 0;
+      P3 := 0;
+      P4 := 0;
+      P5 := 0;
+      P6 := 0;
+      P7 := 0;
+      RA := 1;
+      RB := 1;
+      LA := 7; -- limit for region A
+      LB := 7; -- limit for region B
+      -- ------------  train missions ------------
+      T0 := Train_Mission ( 1, 9,10,13,15,20,23);
+      T1 := Train_Mission ( 3, 9,10,13,15,20,24);
+      T2 := Train_Mission ( 5,27,11,13,16,20,25);
+      T3 := Train_Mission ( 7,27,11,13,16,20,26);
+      T4 := Train_Mission (23,22,17,18,11, 9, 2);
+      T5 := Train_Mission (24,22,17,18,11, 9, 4);
+      T6 := Train_Mission (25,22,17,18,12,27, 6);
+      T7 := Train_Mission (26,22,17,18,12,27, 8);
+      -- -----------------------------------------
+      
+      -- ----- region A: train constraints ------
+      A0 := Train_Constraint ( 0, 0, 0, 1, 0,-1, 0);
+      A1 := Train_Constraint ( 0, 0, 0, 1, 0,-1, 0);
+      A2 := Train_Constraint ( 0, 0, 1,-1, 0, 1, 0);
+      A3 := Train_Constraint ( 0, 0, 1,-1, 0, 0, 0);
+      A4 := Train_Constraint ( 0, 1, 0, 0,-1, 0, 0);
+      A5 := Train_Constraint ( 0, 1, 0, 0,-1, 0, 0);
+      A6 := Train_Constraint ( 0, 0, 0,-1, 0, 0, 0);
+      A7 := Train_Constraint ( 0, 1, 0,-1, 0, 0, 0);
+      -- -----------------------------------------
+      
+      -- ----- region B: train constraints ------
+      B0 := Train_Constraint ( 0, 0, 0, 1, 0,-1, 0);
+      B1 := Train_Constraint ( 0, 0, 0, 1, 0,-1, 0);
+      B2 := Train_Constraint ( 0, 0, 1,-1, 0, 0, 0);
+      B3 := Train_Constraint ( 0, 0, 1,-1, 0, 1, 0);
+      B4 := Train_Constraint ( 0, 1, 0, 0,-1, 0, 0);
+      B5 := Train_Constraint ( 0, 1, 0, 0,-1, 0, 0);
+      B6 := Train_Constraint ( 0, 1, 0,-1, 0, 0, 0);
+      B7 := Train_Constraint ( 0, 0, 0,-1, 0, 0, 0);
+      -- -----------------------------------------
+
+
+      loop
+         select
+            only if
+              (P0 < 6) and
+              (T0 [P0+1] != T1 [P1]) and -- next place of train0 not occupied by train1
+              (T0 [P0+1] != T2 [P2]) and -- next place of train0 not occupied by train2
+              (T0 [P0+1] != T3 [P3]) and
+              (T0 [P0+1] != T4 [P4]) and
+              (T0 [P0+1] != T5 [P5]) and
+              (T0 [P0+1] != T6 [P6]) and
+              (T0 [P0+1] != T7 [P7]) and -- next place of train0 not occupied by train7
+              (RA + A0 [P0+1] <= LA) and -- progress of train0 does not saturate RA
+              (RB + B0 [P0+1] <= LB)     -- progress of train0 does not saturate RD
+            then
+               MOVE (0 of Train_Number);
+               P0 := P0 + 1;
+               RA := RA + A0 [P0];
+               RB := RB + B0 [P0]
+            end if
+          []
+            only if
+              (P1 < 6) and
+              (T1 [P1+1] != T0 [P0]) and 
+              (T1 [P1+1] != T2 [P2]) and
+              (T1 [P1+1] != T3 [P3]) and
+              (T1 [P1+1] != T4 [P4]) and
+              (T1 [P1+1] != T5 [P5]) and
+              (T1 [P1+1] != T6 [P6]) and
+              (T1 [P1+1] != T7 [P7]) and 
+              (RA + A1 [P1+1] <= LA) and
+              (RB + B1 [P1+1] <= LB)    
+            then
+               MOVE (1 of Train_Number);
+               P1 := P1 + 1;
+               RA := RA + A1 [P1];
+               RB := RB + B1 [P1]
+            end if
+          []
+            only if
+              (P2 < 6) and
+              (T2 [P2+1] != T0 [P0]) and
+              (T2 [P2+1] != T1 [P1]) and
+              (T2 [P2+1] != T3 [P3]) and
+              (T2 [P2+1] != T4 [P4]) and
+              (T2 [P2+1] != T5 [P5]) and
+              (T2 [P2+1] != T6 [P6]) and
+              (T2 [P2+1] != T7 [P7]) and  
+              (RA + A2 [P2+1] <= LA) and
+              (RB + B2 [P2+1] <= LB)     
+            then
+               MOVE (2 of Train_Number);
+               P2 := P2 + 1;
+               --if ( P2 == 13 ) then P2 := 0 end if; 
+               RA := RA + A2 [P2];
+               RB := RB + B2 [P2]
+            end if
+          []
+            only if
+              (P3 < 6) and
+              (T3 [P3+1] != T0 [P0])  and
+              (T3 [P3+1] != T1 [P1])  and
+              (T3 [P3+1] != T2 [P2])  and
+              (T3 [P3+1] != T4 [P4])  and
+              (T3 [P3+1] != T5 [P5])  and
+              (T3 [P3+1] != T6 [P6])  and
+              (T3 [P3+1] != T7 [P7])  and
+              (RA + A3 [P3+1] <= LA) and
+              (RB + B3 [P3+1] <= LB)  
+            then
+               MOVE (3 of Train_Number);
+               P3 := P3 + 1;
+               RA := RA + A3 [P3];
+               RB := RB + B3 [P3]
+            end if
+          []
+            only if
+              (P4 < 6) and
+              (T4 [P4+1] != T0 [P0])  and
+              (T4 [P4+1] != T1 [P1])  and
+              (T4 [P4+1] != T2 [P2])  and
+              (T4 [P4+1] != T3 [P3])  and
+              (T4 [P4+1] != T5 [P5])  and
+              (T4 [P4+1] != T6 [P6])  and
+              (T4 [P4+1] != T7 [P7])  and
+              (RA + A4 [P4+1] <= LA) and    
+              (RB + B4 [P4+1] <= LB) 
+            then
+               MOVE (4 of Train_Number);
+               P4 := P4 + 1;
+               RA := RA + A4 [P4];
+               RB := RB + B4 [P4]
+            end if
+          []
+            only if
+              (P5 < 6) and
+              (T5 [P5+1] != T0 [P0]) and
+              (T5 [P5+1] != T1 [P1]) and 
+              (T5 [P5+1] != T2 [P2]) and
+              (T5 [P5+1] != T3 [P3]) and
+              (T5 [P5+1] != T4 [P4]) and
+              (T5 [P5+1] != T6 [P6]) and
+              (T5 [P5+1] != T7 [P7]) and
+              (RA + A5 [P5+1] <= LA) and
+              (RB + B5 [P5+1] <= LB)    
+            then
+               MOVE (5 of Train_Number);
+               P5 := P5 + 1;
+               RA := RA + A5 [P5];
+               RB := RB + B5 [P5]
+            end if
+          []
+            only if
+              (P6 < 6) and
+              (T6 [P6+1] != T0 [P0]) and
+              (T6 [P6+1] != T1 [P1]) and
+              (T6 [P6+1] != T2 [P2]) and
+              (T6 [P6+1] != T3 [P3]) and
+              (T6 [P6+1] != T4 [P4]) and
+              (T6 [P6+1] != T5 [P5]) and
+              (T6 [P6+1] != T7 [P7]) and
+              (RA + A6 [P6+1] <= LA) and
+              (RB + B6 [P6+1] <= LB)
+            then
+               MOVE (6 of Train_Number);
+               P6 := P6 + 1;
+               RA := RA + A6 [P6];
+               RB := RB + B6 [P6]
+            end if
+          []
+            only if
+              (P7 < 6) and
+              (T7 [P7+1] != T0 [P0])  and
+              (T7 [P7+1] != T1 [P1])  and
+              (T7 [P7+1] != T2 [P2])  and
+              (T7 [P7+1] != T3 [P3])  and
+              (T7 [P7+1] != T4 [P4])  and
+              (T7 [P7+1] != T5 [P5])  and
+              (T7 [P7+1] != T6 [P6])  and
+              (RA + A7 [P7+1] <= LA) and
+              (RB + B7 [P7+1] <= LB)
+            then
+               MOVE (7 of Train_Number);
+               P7 := P7 + 1;
+               RA := RA + A7 [P7];
+               RB := RB + B7 [P7]
+            end if
+          []
+            -- ALL TRAINS RUNNING
+            only if (P0 == 6) and (P1 == 6) and (P2 == 6) and (P3 == 6) and 
+                    (P4 == 6) and (P5 == 6) and (P6 == 6) and (P7 == 6) 
+            then
+               ARRIVED
+            end if
+         end select
+      end loop
+   end var
+end process
+
+end module
+
+--
+-- lnt.open cadp_oneway8.lnt generator x
+-- bcg_info x.bcg
+--     
+--  1_636_545 states
+--  7_134_233 transitions
+--     
+-- time lnt.open cadp_oneway8small.lnt evaluator4 cadpafarr.mcl
+--      cadpafarr.mcl ==  mu XXX.(([not ARRIVED] XXX) and (<true> true))
+--      cadpafarr.mcl ==  [ true* ] < true* . ARRIVED > true
+--      cadpafarr.mcl ==  [ true* ] < true> true
+--
+-- >  TRUE
+-- > 
+-- > real	0m29.648s
+-- > user	0m28.341s
+-- > sys	0m1.078s
+-- Evaluator4 Memory 78MB
+--

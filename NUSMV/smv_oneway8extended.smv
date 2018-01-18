@@ -1,0 +1,419 @@
+
+MODULE main
+  -- 
+  -------  train missions ------------------
+DEFINE 
+T0 := [ 1, 9,10,13,15,20,23,22,17,18,11, 9, 2, 1]; -- G1
+T1 := [ 3, 9,10,13,15,20,24,22,17,18,11, 9, 4, 3]; -- R1
+T2 := [ 5,27,11,13,16,20,25,22,17,18,12,27, 6, 5]; -- Y1
+T3 := [ 7,27,11,13,16,20,26,22,17,18,12,27, 8, 7]; -- B1
+T4 := [23,22,17,18,11, 9, 2, 1, 9,10,13,15,20,23]; -- G2
+T5 := [24,22,17,18,11, 9, 4, 3, 9,10,13,15,20,24]; -- R2
+T6 := [25,22,17,18,12,27, 6, 5,27,11,13,16,20,25]; -- Y2
+T7 := [26,22,17,18,12,27, 8, 7,27,11,13,16,20,26]; -- B2
+
+  ------ region A: train constraints ------
+A0 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+A1 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+A2 := [ 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0]; -- Y1
+A3 := [ 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+A4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- G2
+A5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- R2
+A6 := [ 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0]; -- Y2
+A7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0]; -- B2 
+ ------------------------------------------
+
+  ------- region B: train constraints ------
+B0 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+B1 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+B2 := [ 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+B3 := [ 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0]; -- B1
+B4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- G2
+B5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- R2
+B6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0]; -- Y2
+B7 := [ 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0]; -- B2
+  ------------------------------------------
+ 
+
+  ------- region C: train constraints ------
+C0 := [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0]; -- G1
+C1 := [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+C2 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+C3 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+C4 := [ 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0]; -- G2
+C5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0]; -- R2
+C6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- Y2
+C7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- B2
+  ------------------------------------------
+
+  ------- region D: train constraints ------
+D0 := [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+D1 := [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0]; -- R1
+D2 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+D3 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+D4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0]; -- G2
+D5 := [ 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0]; -- R2
+D6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- Y2
+D7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- B2
+  ------------------------------------------
+  
+LA := 7;
+LB := 7;
+LC := 7;
+LD := 7;
+  
+IVAR
+  -- (unfair) selector of the train transition
+  RUNNING: {0,1,2,3,4,5,6,7};
+
+VAR
+  -- (fair) selector of the train transition
+--  RUNNING: 0..7;
+  
+  -- vector of train progesses in the execution of their missions
+  P0: 0..6;
+  P1: 0..6;
+  P2: 0..6;
+  P3: 0..6;
+  P4: 0..6;
+  P5: 0..6;
+  P6: 0..6;
+  P7: 0..6;
+  --
+  --
+  -- the occupation status for regions A and B
+  RA:  0..8; 
+  RB:  0..8;
+  RC:  0..8; 
+  RD:  0..8;
+
+  --
+ASSIGN
+  --
+  -- the initial vector of train progesses
+  init(P0) := 0;
+  init(P1) := 0;
+  init(P2) := 0;
+  init(P3) := 0;
+  init(P4) := 0;
+  init(P5) := 0;
+  init(P6) := 0;
+  init(P7) := 0;
+  --
+  -- the initial occupation status for regions A and B
+  init(RA) := 1;
+  init(RB) := 1;
+  init(RC) := 1;
+  init(RD) := 1;
+  
+TRANS 
+  -- progression rules for the evolving train 0
+ 
+      RUNNING =0 &
+        -- the current train has not yet completed its mission
+        P0 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD
+      ?
+        next(P0) in ((P0+1)  mod 13) &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A0[P0+1]) &
+        next(RB) in (RB + B0[P0+1]) &
+        next(RC) in (RC + C0[P0+1]) &
+        next(RD) in (RD + D0[P0+1]) 
+      : 
+      RUNNING = 1 &
+        P1 < 6 &
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD 
+      ? 
+        next(P0) in P0 &
+        next(P1) in ((P1+1)  mod 13) &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A1[P1+1]) &
+        next(RB) in (RB + B1[P1+1]) &
+        next(RC) in (RC + C1[P1+1]) &
+        next(RD) in (RD + D1[P1+1])    
+     : 
+      RUNNING =2 &
+        P2 < 6 &
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD 
+      ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in ((P2+1)  mod 13) &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A2[P2+1]) &
+        next(RB) in (RB + B2[P2+1]) &
+        next(RC) in (RC + C2[P2+1]) &
+        next(RD) in (RD + D2[P2+1])    
+    :
+     RUNNING =3 &
+        P3 < 6 &
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T3[P3] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LC &
+        RD + D3[P3+1] <= LD 
+    ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in ((P3+1) mod 13) &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A3[P3+1]) &
+        next(RB) in (RB + B3[P3+1]) &
+        next(RC) in (RC + C3[P3+1]) &
+        next(RD) in (RD + D3[P3+1]) 
+   
+    :
+     RUNNING =4 &
+        P4 < 6 &
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T4[P4] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD 
+    ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in ((P4+1)  mod 13) &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A4[P4+1]) &
+        next(RB) in (RB + B4[P4+1]) &
+        next(RC) in (RC + C4[P4+1]) &
+        next(RD) in (RD + D4[P4+1]) 
+    :
+     RUNNING =5 &
+        P5 < 6 &
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD 
+    ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in ((P5+1)  mod 13) &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in (RA + A5[P5+1]) &
+        next(RB) in (RB + B5[P5+1]) &
+        next(RC) in (RC + C5[P5+1]) &
+        next(RD) in (RD + D5[P5+1]) 
+    :
+      RUNNING = 6 &
+        P6 < 6 &
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T6[P6] &
+        T6[P6+1] !=  T7[P7] &
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD 
+    ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in ((P6+1)  mod 13) &
+        next(P7) in P7 &
+        next(RA) in (RA + A6[P6+1]) &
+        next(RB) in (RB + B6[P6+1]) &
+        next(RC) in (RC + C6[P6+1]) &
+        next(RD) in (RD + D6[P6+1]) 
+    :
+     RUNNING =7 &
+        -- the current train has not yet completed its mission
+        P7 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        T7[P7+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD 
+    ?
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in ((P7+1)  mod 13) &
+        next(RA) in (RA + A7[P7+1]) &
+        next(RB) in (RB + B7[P7+1]) &
+        next(RC) in (RC + C7[P7+1]) &
+        next(RD) in (RD + D7[P7+1])
+   :  
+        next(P0) in P0 &
+        next(P1) in P1 &
+        next(P2) in P2 &
+        next(P3) in P3 &
+        next(P4) in P4 &
+        next(P5) in P5 &
+        next(P6) in P6 &
+        next(P7) in P7 &
+        next(RA) in RA &
+        next(RB) in RB &
+        next(RC) in RC &
+        next(RD) in RD
+
+-- FAIRNESS  RUNNING = 0;
+-- FAIRNESS  RUNNING = 1;
+-- FAIRNESS  RUNNING = 2;
+-- FAIRNESS  RUNNING = 3;
+-- FAIRNESS  RUNNING = 4;
+-- FAIRNESS  RUNNING = 5;
+-- FAIRNESS  RUNNING = 6;
+-- FAIRNESS  RUNNING = 7;
+-- 
+-- LTLSPEC
+--   F ((P0=6) & (P1=6) & (P2=6) & (P3=6) &  (P4=6) & (P5=6) & (P6=6) & (P7=6))
+
+CTLSPEC 
+AF ((P0=6) & (P1=6) & (P2=6) & (P3=6) &  (P4=6) & (P5=6) & (P6=6) & (P7=6))
+
+--CTLSPEC 
+--AG EF ((P0=6) & (P1=6) & (P2=6) & (P3=6) &  (P4=6) & (P5=6) & (P6=6) & (P7=6))
+
+
+-------------------------------- end main -------------------------------------------
+-------------------------------------------------------------------------------------
+
+----------------------------------------
+--    Batch Verification:
+----------------------------------------
+--   nusmv -is -r -ctt -v 2 smv_oneway8new.smv
+--
+--
+-- time nusmv -r -v 1 smv_oneway8new.smv
+--     CTLSPEC  AG EF((P0=6) & ... & (P7=6)
+-- > 
+-- > reachable states: 1.63654e+06 (2^20.6422) 
+-- > 
+-- > Successful termination
+-- > 
+-- > real	0m10.841s
+-- > user	0m10.774s
+-- > sys	0m0.045s
+
+-- 
+----------------------------------------
+-- nusmv -v 2 -ctt -r -is smv_oneway8.smv 
+--    -ctt checks totatlity of transition relation function
+--    -r  prints actual number of reachable states 
+--    -v 1   verbose (1..4)
+--    -is   ignore SPEC properties
+--    -AG   used ad hoc algorithm for AG-only properties
+-- nusmv -v 1 -bmc -bmc_length 100 cyclic8-smv.txt 
+------------------------------------------
+--    Interactive Verification:
+-- ./NuSMV -int
+-- read_model -i smv_oneway8.smv
+-- flatten_hierarchy
+-- encode_variables
+-- build_model
+-- check_ctlspec -p "AF (P0 = 0)"
+--------------- other commands --------
+--check_ctlspec [-h] [-m | -o output-file] [-n number | -p
+-- "ctl-expr  [IN context]" | -P "name"]
+--go
+--pick_state -i
+--simulate -i
+---------------------------------------
+--

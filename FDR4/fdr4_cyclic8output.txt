@@ -1,0 +1,9 @@
+      Reconstructing counterexamples
+    Result: Passed
+        Visited States: 159374352
+        Visited Plys: 119
+        Visited Transitions: 810710977
+
+PID    COMMAND  %CPU  TIME     #TH  #WQ #PORTS MEM    PURG CMPRS PGRP  PPID  STATE 
+60853  _refines 773.4 02:07:55 41/8 0   57     3253M+ 0B   0B    60853 60745 running
+

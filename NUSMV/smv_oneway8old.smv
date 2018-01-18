@@ -1,0 +1,967 @@
+
+MODULE main
+  -- 
+  -------  train missions ------------------
+DEFINE 
+T0 := [ 1, 9,10,13,15,20,23,22,17,18,11, 9, 2, 1]; -- G1
+T1 := [ 3, 9,10,13,15,20,24,22,17,18,11, 9, 4, 3]; -- R1
+T2 := [ 5,27,11,13,16,20,25,22,17,18,12,27, 6, 5]; -- Y1
+T3 := [ 7,27,11,13,16,20,26,22,17,18,12,27, 8, 7]; -- B1
+T4 := [23,22,17,18,11, 9, 2, 1, 9,10,13,15,20,23]; -- G2
+T5 := [24,22,17,18,11, 9, 4, 3, 9,10,13,15,20,24]; -- R2
+T6 := [25,22,17,18,12,27, 6, 5,27,11,13,16,20,25]; -- Y2
+T7 := [26,22,17,18,12,27, 8, 7,27,11,13,16,20,26]; -- B2
+
+  ------ region A: train constraints ------
+A0 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+A1 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+A2 := [ 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0]; -- Y1
+A3 := [ 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+A4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- G2
+A5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- R2
+A6 := [ 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0]; -- Y2
+A7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0]; -- B2 
+ ------------------------------------------
+
+  ------- region B: train constraints ------
+B0 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+B1 := [ 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+B2 := [ 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+B3 := [ 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0]; -- B1
+B4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- G2
+B5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0]; -- R2
+B6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0]; -- Y2
+B7 := [ 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0]; -- B2
+  ------------------------------------------
+ 
+
+  ------- region C: train constraints ------
+C0 := [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0]; -- G1
+C1 := [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0]; -- R1
+C2 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+C3 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+C4 := [ 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0]; -- G2
+C5 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0]; -- R2
+C6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- Y2
+C7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- B2
+  ------------------------------------------
+
+  ------- region D: train constraints ------
+D0 := [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0]; -- G1
+D1 := [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0]; -- R1
+D2 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- Y1
+D3 := [ 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0]; -- B1
+D4 := [ 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0]; -- G2
+D5 := [ 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0]; -- R2
+D6 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- Y2
+D7 := [ 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0]; -- B2
+  ------------------------------------------
+  
+LA := 7;
+LB := 7;
+LC := 7;
+LD := 7;
+  
+IVAR
+  -- (unfair) selector of the train transition
+  RUNNING: {0,1,2,3,4,5,6,7};
+
+VAR
+  -- (fair) selector of the train transition
+--  RUNNING: 0..7;
+  
+  -- vector of train progesses in the execution of their missions
+  P0: 0..6;
+  P1: 0..6;
+  P2: 0..6;
+  P3: 0..6;
+  P4: 0..6;
+  P5: 0..6;
+  P6: 0..6;
+  P7: 0..6;
+  --
+  --
+  -- the occupation status for regions A and B
+  RA:  0..8; 
+  RB:  0..8;
+  RC:  0..8; 
+  RD:  0..8;
+
+  --
+ASSIGN
+  --
+  -- the initial vector of train progesses
+  init(P0) := 0;
+  init(P1) := 0;
+  init(P2) := 0;
+  init(P3) := 0;
+  init(P4) := 0;
+  init(P5) := 0;
+  init(P6) := 0;
+  init(P7) := 0;
+  --
+  -- the initial occupation status for regions A and B
+  init(RA) := 1;
+  init(RB) := 1;
+  init(RC) := 1;
+  init(RD) := 1;
+  
+
+  -- progression rules for the evolving train 0
+  next(P0) :=  
+      case RUNNING =0 &
+        -- the current train has not yet completed its mission
+        P0 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD
+        --
+        : (P0+1);  -- mod 13;
+        
+        TRUE
+        : P0;
+      esac; 
+      
+  -- progression rules for the evolving train id
+  next(P1) :=  
+      case RUNNING = 1 &
+        -- the current train has not yet completed its mission
+        P1 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD 
+        --
+        : (P1+1);  --  mod 13;
+        
+        TRUE
+        : P1;
+      esac;   
+
+  -- progression rules for the evolving train id
+  next(P2) :=  
+      case RUNNING =2 &
+        -- the current train has not yet completed its mission
+        P2 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD 
+        --
+        : (P2+1);  --  mod 13;
+        
+        TRUE
+        : P2;
+      esac;     
+      
+   next(P3) := 
+         case RUNNING =3 &
+        -- the current train has not yet completed its mission
+        P3 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LA &
+        RD + D3[P3+1] <= LC
+        --
+        : (P3+1);  --  mod 13;
+        
+        TRUE
+        : P3;
+      esac; 
+      
+  -- progression rules for the evolving train id
+  next(P4) :=  
+      case  RUNNING =4 &
+        -- the current train has not yet completed its mission
+        P4 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD 
+        --
+        : (P4+1);  --  mod 13;
+        
+        TRUE
+        : P4;
+      esac;
+      
+  -- progression rules for the evolving train id
+  next(P5) :=  
+      case RUNNING = 5 &
+        -- the current train has not yet completed its mission
+        P5 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD 
+        --
+        : (P5+1);  --  mod 13;
+        
+        TRUE
+        : P5;
+      esac;
+      
+  -- progression rules for the evolving train id
+  next(P6) :=  
+      case RUNNING = 6 &
+        -- the current train has not yet completed its mission
+        P6 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T7[P7] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD
+        --
+        : (P6+1);  --  mod 13;
+        
+        TRUE
+        : P6;
+      esac;
+
+       
+  next(P7) :=  
+      case RUNNING = 7 &
+        -- the current train has not yet completed its mission
+        P7 < 6 &
+        --
+        -- the next place is not occupied by other trains
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        -- 
+        -- the progression step of id satisfies all contraints
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD 
+        --
+        : (P7+1);  --  mod 13;
+        
+        TRUE
+        : P7;
+      esac;
+      
+  ------------------------------------------------------------
+  -- rule for the update of the occupation status of region A
+  next(RA):=  
+      case
+        --
+        --  if train 0 can proceed, update RB according to CC
+        RUNNING =0 &
+        P0 < 6 &
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD &
+        RA + A0[P0+1] >= 0 
+        : RA + A0[P0+1];
+
+        --
+        --  if train 1 can proceed, update RB according to CC
+        RUNNING = 1 &
+        P1 < 6 &
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD &
+        RA + A1[P1+1] >= 0 
+         : RA + A1[P1+1];
+        --
+        --  if train 2 can proceed, update RB according to CC
+        RUNNING = 2 &
+        P2 < 6 &
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD &
+        RA + A2[P2+1] >= 0 
+         : RA + A2[P2+1];        --
+        --  if train 3 can proceed, update RB according to CC
+        RUNNING = 3 &
+        P3 < 6 &
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LA &
+        RD + D3[P3+1] <= LC &
+        RA + A3[P3+1] >= 0 
+        : RA + A3[P3+1];
+        --
+        --  if train 4 can proceed, update RB according to CC
+        RUNNING = 4 &
+        P4 < 6 &
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD &
+        RA + A4[P4+1] >= 0 
+         : RA + A4[P4+1];
+        --
+        --  if train 5 can proceed, update RB according to CC
+        RUNNING = 5 &
+        P5 < 6 &
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD &
+        RA + A5[P5+1] >= 0 
+        : RA + A5[P5+1];
+        --
+        --  if train 6 can proceed, update RB according to CC
+        RUNNING = 6 &
+        P6 < 6 &
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T7[P7] &
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD &
+        RA + A6[P6+1] >= 0 
+        : RA + A6[P6+1];
+        --
+        --  if train 7 can proceed, update RB according to CC
+        RUNNING = 7 &
+        P7 < 6 &
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD &
+        RA + A7[P7+1] >= 0 
+        : RA + A7[P7+1];
+        --
+        --  if no train can proceed, RB does not change
+        TRUE
+         : RA;
+      esac;
+
+
+  -- rule for the update of the occupation status of region B
+  next(RB):=  
+      case
+        --
+        --  if train 0 can proceed, update RB according to CC
+        RUNNING =0 &
+        P0 < 6 &
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD &
+        RB + B0[P0+1] >= 0
+        : RB + B0[P0+1];
+
+        --
+        --  if train 1 can proceed, update RB according to CC
+        RUNNING = 1 &
+        P1 < 6 &
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD &
+        RB + B1[P1+1] >= 0 
+         : RB + B1[P1+1];
+        --
+        --  if train 2 can proceed, update RB according to CC
+        RUNNING = 2 &
+        P2 < 6 &
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD &
+        RB + B2[P2+1] >= 0 
+         : RB + B2[P2+1];        --
+        --  if train 3 can proceed, update RB according to CC
+        RUNNING = 3 &
+        P3 < 6 &
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LA &
+        RD + D3[P3+1] <= LC &
+        RB + B3[P3+1] >= 0 
+        : RB + B3[P3+1];
+        --
+        --  if train 4 can proceed, update RB according to CC
+        RUNNING = 4 &
+        P4 < 6 &
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD &
+        RB + B4[P4+1] >= 0 
+         : RB + B4[P4+1];
+        --
+        --  if train 5 can proceed, update RB according to CC
+        RUNNING = 5 &
+        P5 < 6 &
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD &
+        RB + B5[P5+1] >= 0 
+        : RB + B5[P5+1];
+        --
+        --  if train 6 can proceed, update RB according to CC
+        RUNNING = 6 &
+        P6 < 6 &
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T7[P7] &
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD &
+        RB + B6[P6+1] >= 0
+        : RB + B6[P6+1];
+        --
+        --  if train 7 can proceed, update RB according to CC
+        RUNNING = 7 &
+        P7 < 6 &
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD &
+        RB + B7[P7+1] >= 0 
+        : RB + B7[P7+1];
+        --
+        --  if no train can proceed, RB does not change
+        TRUE
+         : RB;
+      esac;
+
+  -- rule for the update of the occupation status of region B
+  next(RC):=  
+      case
+        --
+        --  if train 0 can proceed, update RB according to CC
+        RUNNING =0 &
+        P0 < 6 &
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD &
+        RC + C0[P0+1] >= 0 
+        : RC + C0[P0+1];
+
+        --
+        --  if train 1 can proceed, update RB according to CC
+        RUNNING = 1 &
+        P1 < 6 &
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD &
+        RC + C1[P1+1] >= 0 
+         : RC + C1[P1+1];
+        --
+        --  if train 2 can proceed, update RB according to CC
+        RUNNING = 2 &
+        P2 < 6 &
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD &
+        RC + C2[P2+1] >= 0 
+         : RC + C2[P2+1];        --
+        --  if train 3 can proceed, update RB according to CC
+        RUNNING = 3 &
+        P3 < 6 &
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LA &
+        RD + D3[P3+1] <= LC &
+        RC + C3[P3+1] >= 0 
+        : RC + C3[P3+1];
+        --
+        --  if train 4 can proceed, update RB according to CC
+        RUNNING = 4 &
+        P4 < 6 &
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD &
+        RC + C4[P4+1] >= 0 
+         : RC + C4[P4+1];
+        --
+        --  if train 5 can proceed, update RB according to CC
+        RUNNING = 5 &
+        P5 < 6 &
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD &
+        RC + C5[P5+1] >= 0 
+        : RC + C5[P5+1];
+        --
+        --  if train 6 can proceed, update RB according to CC
+        RUNNING = 6 &
+        P6 < 6 &
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T7[P7] &
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD &
+        RC + C6[P6+1] >= 0 
+        : RC + C6[P6+1];
+        --
+        --  if train 7 can proceed, update RB according to CC
+        RUNNING = 7 &
+        P7 < 6 &
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD &
+        RC + C7[P7+1] >= 0 
+        : RC + C7[P7+1];
+        --
+        --  if no train can proceed, RB does not change
+        TRUE
+         : RC;
+      esac;
+
+  -- rule for the update of the occupation status of region B
+  next(RD):=  
+      case
+        --
+        --  if train 0 can proceed, update RD according to CC
+        RUNNING =0 &
+        P0 < 6 &
+        T0[P0+1] !=  T1[P1] &
+        T0[P0+1] !=  T2[P2] &
+        T0[P0+1] !=  T3[P3] &
+        T0[P0+1] !=  T4[P4] &
+        T0[P0+1] !=  T5[P5] &
+        T0[P0+1] !=  T6[P6] &
+        T0[P0+1] !=  T7[P7] &
+        RA + A0[P0+1] <= LA &
+        RB + B0[P0+1] <= LB &
+        RC + C0[P0+1] <= LC &
+        RD + D0[P0+1] <= LD &
+        RD + D0[P0+1] >= 0
+        : RD + D0[P0+1];
+
+        --
+        --  if train 1 can proceed, update RB according to CC
+        RUNNING = 1 &
+        P1 < 6 &
+        T1[P1+1] !=  T0[P0] &
+        T1[P1+1] !=  T2[P2] &
+        T1[P1+1] !=  T3[P3] &
+        T1[P1+1] !=  T4[P4] &
+        T1[P1+1] !=  T5[P5] &
+        T1[P1+1] !=  T6[P6] &
+        T1[P1+1] !=  T7[P7] &
+        RA + A1[P1+1] <= LA &
+        RB + B1[P1+1] <= LB &
+        RC + C1[P1+1] <= LC &
+        RD + D1[P1+1] <= LD &
+        RD + D1[P1+1] >= 0
+         : RD + D1[P1+1];
+        --
+        --  if train 2 can proceed, update RB according to CC
+        RUNNING = 2 &
+        P2 < 6 &
+        T2[P2+1] !=  T0[P0] &
+        T2[P2+1] !=  T1[P1] &
+        T2[P2+1] !=  T3[P3] &
+        T2[P2+1] !=  T4[P4] &
+        T2[P2+1] !=  T5[P5] &
+        T2[P2+1] !=  T6[P6] &
+        T2[P2+1] !=  T7[P7] &
+        RA + A2[P2+1] <= LA &
+        RB + B2[P2+1] <= LB &
+        RC + C2[P2+1] <= LC &
+        RD + D2[P2+1] <= LD &
+        RD + D2[P2+1] >= 0
+         : RD + D2[P2+1];
+        --
+        --  if train 3 can proceed, update RB according to CC
+        RUNNING = 3 &
+        P3 < 6 &
+        T3[P3+1] !=  T0[P0] &
+        T3[P3+1] !=  T1[P1] &
+        T3[P3+1] !=  T2[P2] &
+        T3[P3+1] !=  T4[P4] &
+        T3[P3+1] !=  T5[P5] &
+        T3[P3+1] !=  T6[P6] &
+        T3[P3+1] !=  T7[P7] &
+        RA + A3[P3+1] <= LA &
+        RB + B3[P3+1] <= LB &
+        RC + C3[P3+1] <= LA &
+        RD + D3[P3+1] <= LC &
+        RD + D3[P3+1] >= 0
+        : RD + D3[P3+1];
+        --
+        --  if train 4 can proceed, update RB according to CC
+        RUNNING = 4 &
+        P4 < 6 &
+        T4[P4+1] !=  T0[P0] &
+        T4[P4+1] !=  T1[P1] &
+        T4[P4+1] !=  T2[P2] &
+        T4[P4+1] !=  T3[P3] &
+        T4[P4+1] !=  T5[P5] &
+        T4[P4+1] !=  T6[P6] &
+        T4[P4+1] !=  T7[P7] &
+        RA + A4[P4+1] <= LA &
+        RB + B4[P4+1] <= LB &
+        RC + C4[P4+1] <= LC &
+        RD + D4[P4+1] <= LD &
+        RD + D4[P4+1] >= 0
+         : RD + D4[P4+1];
+        --
+        --  if train 5 can proceed, update RB according to CC
+        RUNNING = 5 &
+        P5 < 6 &
+        T5[P5+1] !=  T0[P0] &
+        T5[P5+1] !=  T1[P1] &
+        T5[P5+1] !=  T2[P2] &
+        T5[P5+1] !=  T3[P3] &
+        T5[P5+1] !=  T4[P4] &
+        T5[P5+1] !=  T6[P6] &
+        T5[P5+1] !=  T7[P7] &
+        RA + A5[P5+1] <= LA &
+        RB + B5[P5+1] <= LB &
+        RC + C5[P5+1] <= LC &
+        RD + D5[P5+1] <= LD &
+        RD + D5[P5+1] >= 0
+        : RD + D5[P5+1];
+        --
+        --  if train 6 can proceed, update RB according to CC
+        RUNNING = 6 &
+        P6 < 6 &
+        T6[P6+1] !=  T0[P0] &
+        T6[P6+1] !=  T1[P1] &
+        T6[P6+1] !=  T2[P2] &
+        T6[P6+1] !=  T3[P3] &
+        T6[P6+1] !=  T4[P4] &
+        T6[P6+1] !=  T5[P5] &
+        T6[P6+1] !=  T7[P7] &
+        RA + A6[P6+1] <= LA &
+        RB + B6[P6+1] <= LB &
+        RC + C6[P6+1] <= LC &
+        RD + D6[P6+1] <= LD &
+        RD + D6[P6+1] >= 0
+        : RD + D6[P6+1];
+        --
+        --  if train 7 can proceed, update RB according to CC
+        RUNNING = 7 &
+        P7 < 6 &
+        T7[P7+1] !=  T0[P0] &
+        T7[P7+1] !=  T1[P1] &
+        T7[P7+1] !=  T2[P2] &
+        T7[P7+1] !=  T3[P3] &
+        T7[P7+1] !=  T4[P4] &
+        T7[P7+1] !=  T5[P5] &
+        T7[P7+1] !=  T6[P6] &
+        RA + A7[P7+1] <= LA &
+        RB + B7[P7+1] <= LB &
+        RC + C7[P7+1] <= LC &
+        RD + D7[P7+1] <= LD &
+        RD + D7[P7+1] >= 0
+        : RD + D7[P7+1];
+        --
+        --  if no train can proceed, RB does not change
+        TRUE
+         : RD;
+      esac;
+
+   --  property: all trains eventually complete their mission
+CTLSPEC 
+AG EF ((P0=6) & (P1=6) & (P2=6) & (P3=6) &  (P4=6) & (P5=6) & (P6=6) & (P7=6))
+
+-- FAIRNESS  RUNNING = 0;
+-- FAIRNESS  RUNNING = 1;
+-- FAIRNESS  RUNNING = 2;
+-- FAIRNESS  RUNNING = 3;
+-- FAIRNESS  RUNNING = 4;
+-- FAIRNESS  RUNNING = 5;
+-- FAIRNESS  RUNNING = 6;
+-- FAIRNESS  RUNNING = 7;
+-- 
+-- LTLSPEC
+--   F ((P0=6) & (P1=6) & (P2=6) & (P3=6) &  (P4=6) & (P5=6) & (P6=6) & (P7=6))
+
+-------------------------------- end main -------------------------------------------
+-------------------------------------------------------------------------------------
+
+----------------------------------------
+--    Batch Verification:
+----------------------------------------
+-- time nuXmv -r -is smv_oneway8.smv 
+-- > -- specification AG(EF(((((((P0=6 & P1=6) & P2=6) & P3=6) & P4=6) & P5=6) & P6=6) & P7=6))  
+--         -- > is true
+-- > system diameter: 49
+-- > reachable states: 1.63654e+06 (2^20.6422) out of 3.78229e+10 (2^35.1385)
+-- > 
+-- > real	0m25.310s
+-- > user	0m25.085s
+-- > sys	0m0.141s
+--
+--   nusmv -is -r -ctt -v 1 smv_oneway8.smv
+--
+--  reachable states: 1.63654e+06 
+--
+----------------------------------------
+-- nusmv -v 2 -ctt -r -is smv_oneway8.smv 
+--    -ctt checks totatlity of transition relation function
+--    -r  prints actual number of reachable states 
+--    -v 1   verbose (1..4)
+--    -is   ignore SPEC properties
+--    -AG   used ad hoc algorithm for AG-only properties
+-- nusmv -v 1 -bmc -bmc_length 100 cyclic8-smv.txt 
+------------------------------------------
+--    Interactive Verification:
+-- ./NuSMV -int
+-- read_model -i smv_oneway6.smv
+-- flatten_hierarchy
+-- encode_variables
+-- build_model
+-- check_ctlspec -p "AF (P0 = 0)"
+--------------- other commands --------
+--check_ctlspec [-h] [-m | -o output-file] [-n number | -p
+-- "ctl-expr  [IN context]" | -P "name"]
+--go
+--pick_state -i
+--simulate -i
+---------------------------------------
+--

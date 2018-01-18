@@ -1,0 +1,319 @@
+
+----- ONEWAY8  -----
+UMC:  1_636_545 states,   7_134_233 trans.   macOS             AF      38secs,  2.9 GB
+SMV:  1.63654e+06 states:                    macOS             AF     2.9secs,   74 MB
+SPIN: 1_636_546 states,   7_134_235 trans.   macOS,dfs         F      13 secs,    1 GB
+CADP: 1_636_545 states,   7_134_233 trans.   macOS             muAF    29secs,   78 MB
+FDR:  1_636_546 states    7_134_234 trans.   macOS,            assert  41secs,  650 MB
+MCRL2:1_636_545 states,   7_134_233 trans.   macOS             muAF     2secs,    1 GB
+ProB/CSP: 1_636_546 states, 7_134_234 trans  macOS      (just deadlock) 120min,  82 GB
+Prob/MCH: 1_636_547 states, 7_134_235 trans. macOS      (just deadlock)  32min    3 GB
+TLA+: 1_636_547 states,                      macOS             AF    3min17secs   1 GB
+UPPAAL
+----------------------- 
+
+----- ROUND8 ---------- 
+UMC:  91_890_065 states, 453_321_793 trans.  Linux             AF     16hours,  112 GB
+SMV:  9.18901e+07                            macOS             AG EF    34min,  1.4 GB
+FDR:  91_890_066 states,453321794 trans.     macOS,disk        assert   60min,   31 GB
+CADP: 91_890_065 states, 453_ 321_793 trans. Linux             muAF     79min,  7.3 GB 
+MCRL2 91_890_065 states, 453_321_793 trans.  macOS             muAF    145min,   43 GB
+SPIN: 91_890_065 states, 4.533218e+08 trans. Linux,-DBFS_DISK,  F        185m,  102 GB
+----------------------- 
+
+----- CYCLIC8 -- JUST DEADLOCKS --------- 
+UMC:  159_374_352 states 810_710_977 trans.     Linux    mcstats          3days,    ??
+CADP: 810_710_978 states, 4_230_514_202 trans.  Linux    bcg_info          ??       ??
+SPIN:                                           Linux    end_states        ??       ??
+SMV:   1.59374e+08                              macOS    -is             30min   1.4 GB
+FDR4: 159_374_352 states, 810_710_977 trans.    macOS [deadlock free [F] 18min,  3.2 GB
+MCRL2:159_374_352 states, 810_710_976 trans.    Linux   "lps2lts -D"    74 min,  8.2 GB
+----------------------- 
+
+----- CYCLIC8 -- AG EF arrived  ---------- 
+UMC:   159_374_352 states    810_710_977        Linux   AG EF          killed after 2 days
+CADP:  810_710_978 states, 4_230_514_202 trans. Linux,  AG EF          killed after 2 days
+SPIN:                                                    n/a              ---     ---
+SMV:   1.59374e+08 macOS                        macOS   AG EF           71 min  2 GB
+FDR4:  159_374_352 states, 810_710_977 trans.             n/a             ---     ---
+MCRL2: 159_374_352 states, 810_710_976 trans.   Linux  AG EF           killed after 2 days
+==============================================================================
+
+
+macOS top -pid xxx  -s 60 -l   maxloops
+Linux top -p xxx  -d 60 -b    -n maxloops
+
+----- COUNTER EXAMPLES -----
+UMC:  "why"  or +z  gives complete explanation
+SMV:  in case of faiure a counter-examples trace is generated.
+       in interactive mode it is possible to simulate a trace.
+SPIN: in case or errros the "-e" option passed to pan  create  model.trail file
+    the trail file che be re-executed with the "pan -r" command
+    spin -k also allows to display the trail.  iSpin JSpin GUI allow a grahical visualization.
+CADP:  evaluator4 -diag  saved bcg graph with counter-example/proof tree  
+       graphical GUI allows the visualization.
+FDR:   in case of assertion violation an explantion trace is presented that illustrated the mismatch
+        betweenthe specification andthe implementation. A graphical GUI allows iys visualization 
+MCRL2:   No counterexample in terms of lTS transitions if given when a formula is false
+------- ONEWAY8 best command options ----
+
+
+----- STATE SPACE ANALYSIS  -----
+UMC:  mcstats :  states, transitions, deadlocks
+SMV:  nusmv -r 
+SPIN: xxx states stored  (after commenting formula)
+CADP: lnt-open file generator model.lnt (generates model.bcg); bcg_info file.bcg
+FDR:  
+MCRL2: mcrl22lps model.mcrl2 mkdel.lps; lps2lts model.lps model.lts; ltsinfo model.lts
+--------------------------------------------
+
+------- ONEWAY8 best command options ----
+SPIN:
+  spin -a spin_oneway8.pml
+  gcc -O2 -DVECTORSZ=256000 -o pan pan.c 
+  pan -m100 -v -w33
+  > real	0m55.060s
+UMC:
+ umc -m3 -100 -z umc_oneway8.txt AFARR.txt 
+  >  real	0m38.120s
+CADP:
+  lnt.open cadp_oneway8.lnt evaluator4 formula.mcl
+  > real	0m31.787s
+NUSMV (NUXMV):
+  nusmv -r -v 1 smv_oneway8new.smv
+  > real	0m11.214s
+FDR4:
+  refines fdr4_oneway8new.txt
+  > real	2m30.424s
+  refines --refinement-storage-file-path swapdir fdr4_round8.txt
+MCRL2:
+  mcrl22lps mcrl2_oneway8.txt temp.lps
+  lps2pbes -fformula.mcf  temp.lps  temp.pbes
+  time pbes2bool -s2 -vrjittyc temp.pbes
+  > real    1m57.413s
+---------------------- 
+----- ROUND8 COMMANDS----- 
+UMC (Linux):  
+   umc -110 -z -m3 umc_round8.txt  AF.txt 
+FDR (macOS):
+   refines --refinement-storage-file-path swapdir fdr4_round8.txt 
+SPIN (Linux):
+   spin -a spin_round8.pml
+   gcc -O2 -DBFS -DBFS_DISK -DVECTORSZ=256000 -o pan pan.c
+   pan -v -w32
+CADP (Linux):
+   lnt.open cadp_round8.lnt evaluator4 AF.mcl
+SMV (macOS):
+   macOS: nusmv -r -v 1 smv_round8.smv
+MCRL2 (macOS):
+   mcrl22lps mcrl2_round8.txt temp.lps
+   lps2pbes -fAF.mcf  temp.lps  temp.pbes
+   pbes2bool -s2 -vrjittyc temp.pbes
+---------------------- 
+
+
+----- ROUND8 COMMANDS----- 
+UMC:  
+   umcstats  -m3 umc_round8.txt
+FDR4:
+   refines --refinement-storage-file-path swapdir fdr4_round8.txt 
+SPIN:
+   spin -a spin_round8.pml
+   gcc -O2 -DBFS -DBFS_DISK -DVECTORSZ=256000 -o pan pan.c
+   pan -v -w32
+CADP:
+   lnt.open cadp_round8.lnt evaluator4 formula.mcl
+NUSMV (NUXMV):
+   nusmv -r -v 1 smv_round8.smv
+MCRL2:
+   mcrl22lps mcrl2_round8.txt temp.lps
+   lps2pbes -fformula.mcf  temp.lps  temp.pbes
+   pbes2bool -s2 -vrjittyc temp.pbes
+---------------------- 
+
+===============================================================================
+
+Remarks on the equivalence of the various models used in the experimentation:
+Confidence in the equivalence of various model can be gained:
+1) By observing the directness of the translations, which some times is not far from
+just translating "&"  with "&&"  and "T0[P0]"  with "T0(P0)" (even if this may sometime 
+result in a trap when indendical constructs result to have different sematics)
+2) By observing the size of the abstract evolution graph computer by the various tools
+  with result to be precisely the same (or directly equivalent) in the various frameworks.
+  E.g.
+ SPIN statespace has +1 state and +1 transition
+ FDR model uses 2 steps for any abstract transition (fdrstates == states+transitions)
+ CAPD cyclic version is actuallylarger and needs minimization
+
+ROUND8:  Single round missions actually allow to model the case study more deeply
+and verify the presence of further critical regions and deadlock cases.
+However this case already allows to touch with hand the effect of state explosion.
+-The size of the model becomes signifcative (91 millions states,+5600%). 
+-Evaluation time passes from minutes (or seconds) to days.
+-Tools are put under stress and specific measures must be taken to achive a result.
+It already makes sense to try to prove the equivalence with smaller models
+On the fly, bounded approaches are however are able to discover the seeded deadlock cases
+in a reasonable time, even if the tools may have difficulty in proving the complete 
+model correctness.
+We already knew these additional deadlock cases, whose presence has been shown in [FMICS]
+can be guessed by a direct analysis of the trains missions (i.e. without performing any
+model checking).
+
+CYCLIC8: Continuously cyclicing round mission are an additional complexity that could
+be introduced in the modelling. It actually increases the memory requirements of 170% but
+the affect on the evalution time is even much worse because of the cost tof swapping.
+Only in a few cases we have been able to prove the correctness of the model adopting this
+brute-force approach.
+In this case it makes becomes almost mandatory to try to prove the equivalence with 
+smaller models, or to decompose the system in smaller pieces.
+In out case it is possible to prove that the CYCLIC8 model is actually equivalent to the
+ROUND8 model in terms of possible failures (because of the symmetry of the two trains 
+executing the same looping mission).
+UMC cyclic 8 fails on MacOS and requires Linux, and many days for large swapping
+
+
+FULL SYSTEM:  The original system is actually much larger, and the piece shown in the
+experimentation is just one of the three regions in which it has been decomposed.
+The full system would actually have 8 trains performing round missions of length 20
+(versus the length 6 and 13 of our case experimentation), and the possiblity of verifying
+it using a brute-force approach has not even been taken into serious account.
+
+We remember that the main goals of this paper it to experiment on tool diversity with 
+respect to the verification of a common design, with the purpose of achiving a
+a greater confidence on the tools results, and of exploiting the various additional
+features that each environment provides.
+
+LIVELOCKS
+The introduction of cyclic missions introduces, in general the issue of discovering
+partial deadlocks (i.e. livelocks). This kind of liveness property can be difficult to be
+expressed and analysed in trace oriented verification frameworks (SPIN, FDR4, NuSMV-SAT).
+However a system with a partial deadlock can be often reduced to the case of a system with 
+a full dedlock by just removing some of its components.  In case stsudy no partial deadlock
+is possible because, the minimal deadlock requires the participation of all the 8 trains 
+and result in a complete blocking of the overall service.
+In the case of full system, livelocks are actually possible since the 4 trains of the 
+green and red lines, if not correctly scheduled, can actually cause a partial deadlock in 
+the upper-left region of the full system, while the 4 trains of the yellow-blue lines can
+continue their circular missions without interruption. Notice that our full system 
+decomposition has the effect of translating the partial deadlocks into complete deadlocks
+with respect to the analysed regions in they occur.
+
+In the case of a CYCLIC SPIN/SMV model a livelock can be enforced by allowing only 
+trains T0-T4-T5 to run
+We can see that no deadlock are detected, even if "AG EF P0=0 & ... P7=0" is clearly FALSE.
+
+REMARKS:
+nuXmv can export the model in EFSM format!
+deadlocks can be found my just generating statespace in
+- Spin (0 errors = no invlid endpoints)
+- umcstats
+- Nusmv ( o deadlokcs)
+- fdr4 ??    (-D  option, di chetool e'?)
+- mcrl2 ??
+
+
+------- ROUND8 WITH ERRORS (LC=LD=8) ----------------
+------------------
+
+----- ONEWAY8 OLD MODELS -----
+FDR:  8_770_778 states,  14_268_465 transitions  (OLDMODEL, UMC states+ transitions)  
+FDR:  1_636_546 states    7_134_233 transitions  (sequential, diskbased, MACacOS, 83mins, withassert) 
+FDR:  1_636_546 states    7_134_233  Result: Passed
+        Visited States: 1636546
+        Visited Transitions: 7134234
+        Visited Plys: 50
+        Estimated Total Storage: 268MB
+real	1m55.885s
+
+----- ROUND 8 KO -----
+UMC:  91_890_065 states, 453_321_793 transitions 
+      (Linux,965 mins=16hours,  AFarrived) 112G
+      (MacOS Killed by Kernel, 
+CADP: (MacOS memory error 32bit code), 
+FDRparallelOLD:  545_211_858 states and 906.643.585 transitions 
+      (UMC states+ transitions, Linux, 100G, diskpath, 33h)
+FDR:  (macOS, sequential, diskbased, (83 min, )
+SPIN:  Linux Depth First: Killed by User afyter 8 hours
+       MacOS DepthFirst with F property : Killed by Kernel,  
+       MacOS BreadthFirst_DiskBased with F property Killed by Kernel, ????
+       MacOS BreadthFirst_DiskBased with NO PROPERTIES??)
+------------------
+
+----- ROUND6 (T0-T1-T2-T4-T5-T6)-----
+UMC:  1_249_938 states, 5_214_057 transitions (depth 79).
+CADP: 1_249_938 states  5_214_057 transitions
+SPIN: 1_249_940 states, 5_214_060 transition   (FDR states == UMC states+2)
+SMV:  1.24994e+06 states   (66 minutes with property, smv_round6.smv, 
+SMV:  1.24994e+06 states   (nusmv, smv_round6new.smv, 43 secs, MacOS)
+FDR:  6_463_995 states, 10_428_113 transitions (FDR states == UMC states+transitions)
+MCRL2: 1_249_938 states, 5_214_057 transitions)
+PROB: 
+-----------------
+
+========================================================================
+     MORE OPTIONS (commadn line flags)
+FDR4: refine   --refinement.storage.file.path=~mazzanti/Desktop/WORK/swapdir 
+         --refinement.storage.file.cache_size  90%(default)  or 55GB     memory chace size
+MCRL2:   pbes2bool -zb    breadth-first
+
+================   more test cases (for model equivalence) =============
+
+----- CYCLIC2 -----
+UMC:  154 states, 279 transitions,  (depth 31)
+CADP: (280 states, 530 transitions) -BCG_MIN-> 154 states 279 transitions
+SPIN: 155 states,  280 transitions (no properties)
+SMV:  154 states,
+FDR:
+MCRL2:154 states (via ltsinfo)
+-----------------
+
+----- CYCLIC4 T0145-----
+UMC:  17_412 states,   52_841 transitions, (depth 60)
+CADP: (52_842 states, 167_142 transitions  -BCG_MIN-> 17_412 states, 52_841 transitions
+SPIN: 17_413 states,   52_842 transitions
+SMV:  17_412 states,
+FDR:  
+MCRL2: 17_412 states,  52_841 transitions
+-----------------
+----- CYCLIC4 T0347-----
+UMC:  
+CADP: 
+SPIN: 
+SMV: 
+FDR:  
+MCRL2: 
+-----------------
+
+----- CYCLIC6 -----
+UMC:  1_957_272 states,   8_423_449 transitions  (depth  90)
+CADP: (8_423_450 states, 37_206_860 transitions -BCG_MIN-> 1_957_272 states 8_423_449 transitions
+SPIN: killed by kernel on MacOS (!?!?!)
+SMV:  1.95727e+06 states (MacBook  Air , with property, 1m17s)
+FDR:  
+MCRL2:
+-----------------
+
+
+
+----- ROUND6_2 -----
+UMC:  
+CADP: 
+SPIN: 
+SMV: 
+FDR: 
+MCRL2: 
+
+-- T0-T1-T2-T4-T5-T6  =  1_249_938  states
+-----------------
+
+----- ROUND4CB (T0+T3+T4+T7)-----
+UMC:   14_675  (2.377s, agef, MacOS)
+CADP:  
+SPIN: 14_676 states 47228 transitions (p1) (14677 without p1) (14675 p1 breadth first)
+SMV:  14_675 (1m32s with property evaluation, 0m078s  with round4new.smv MacOS)
+XMV:  14_675  (10 secs, MacOS)
+FDR:  
+MCRL2: 
+PRO:   14_675 
+-----------------
+

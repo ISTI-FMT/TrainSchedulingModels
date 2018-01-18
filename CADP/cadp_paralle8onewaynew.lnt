@@ -1,0 +1,306 @@
+
+module cadp_paralle8oneway is
+
+type Train_Number is
+   range 0 .. 7 of nat
+end type
+
+------------------------------------------------------------------------------
+
+type Train_Mission is
+    array [0 .. 6] of nat
+end type
+
+------------------------------------------------------------------------------
+
+type Train_Constraint is
+    array [0 .. 6] of int -- actually, of range -1 .. 1
+end type
+
+------------------------------------------------------------------------------
+
+function LA : Nat is 
+   return 7 -- limit for region A
+end function
+
+------------------------------------------------------------------------------
+
+function LB : Nat is 
+   return 7 -- limit for region B
+end function
+
+------------------------------------------------------------------------------
+
+function Steps : Nat is
+    return 6
+end function
+
+------------------------------------------------------------------------------
+
+channel Tic is
+   (p1:Nat, ra:Int, rb:Int)
+end channel
+
+------------------------------------------------------------------------------
+
+channel Toc is
+   (p2:Nat)
+end channel
+
+------------------------------------------------------------------------------
+
+process E [ENTER:Tic, LEAVE:Toc] (id:Nat) is
+   var ra:Int, rb:Int in
+     ENTER (id, ?ra, ?rb);
+     use ra, rb;
+     EB [ENTER, LEAVE] (id)
+   end var
+end process
+     
+process EB [ENTER:Tic, LEAVE:Toc] (id:Nat) is
+     LEAVE (id);
+     E [ENTER, LEAVE] (id)
+end process
+
+------------------------------------------------------------------------------
+
+process Train [tenter:Tic, texit:Toc, ARRIVED:none]
+        (T:Train_Mission, A:Train_Constraint, B:Train_Constraint) is
+   var Progress:Nat in
+      Progress := 0;
+      loop 
+         if (Progress < Steps) then
+            tenter (T [Progress + 1], A [Progress + 1], B [Progress + 1]); 
+            texit (T [Progress]);
+            Progress := Progress + 1
+         else 
+            assert Progress == Steps;
+            ARRIVED
+         end if
+      end loop 
+   end var
+end process
+
+------------------------------------------------------------------------------
+
+process Ra [raenter:Tic] is
+   var Count:Nat, p1:Nat, rb:Int in
+   Count := 1;
+   loop
+      select
+         only if Count <= LA then 
+            raenter (?p1, 0 of Int, ?rb) 
+         end if
+         [] 
+         only if Count < LA then
+            raenter (?p1, 1 of Int, ?rb);
+            Count := Count + 1
+         end if
+         [] 
+         only if Count > 0 then
+            raenter (?p1, -1, ?rb);
+            Count := Count - 1
+         end if
+      end select;
+      use p1, rb
+   end loop
+end var
+end process
+
+------------------------------------------------------------------------------
+
+process Rb [rbenter:Tic] is
+   var Count:Nat, p1:Nat, ra:Int in
+      Count := 1;
+      loop
+         select
+            only if Count <= LB then 
+               rbenter (?p1, ?ra, 0 of Int) 
+            end if
+            [] 
+            only if Count < LB then
+               rbenter (?p1, ?ra, 1 of Int);
+               Count := Count + 1
+            end if
+            [] 
+            only if Count > 0 then
+               rbenter (?p1, ?ra, -1);
+               Count := Count - 1
+            end if
+         end select;
+         use p1, ra
+      end loop
+   end var
+end process
+
+------------------------------------------------------------------------------
+
+process Pulse [tic:Tic, toc:Toc] is
+   var p1, p2: Nat, ra, rb: Int in
+      loop
+         tic(?p1, ?ra, ?rb);
+         use p1, ra, rb;
+         toc(?p2);
+         use p2
+      end loop
+   end var
+end process
+
+------------------------------------------------------------------------------
+
+process Main [ENTER:Tic, LEAVE:Toc, ARRIVED:none] is
+   var
+       T0, T1, T2, T3, T4, T5, T6, T7 : Train_Mission,
+       A0, A1, A2, A3, A4, A5, A6, A7 : Train_Constraint,
+       B0, B1, B2, B3, B4, B5, B6, B7 : Train_Constraint
+   in
+      -- ------------  train missions ------------
+      --   [ 1, 9,10,13,15,20,23] -- T0
+      --   [ 3, 9,10,13,15,20,24] -- T1
+      --   [ 5,27,11,13,16,20,25] -- T2
+      --   [ 7,27,11,13,16,20,26] -- T3
+      --   [23,22,17,18,11, 9, 2] -- T4
+      --   [24,22,17,18,11, 9, 4] -- T5
+      --   [25,22,17,18,12,27, 6] -- T6
+      --   [26,22,17,18,12,27, 8] -- T7
+      -- -----------------------------------------
+      T0 := Train_Mission (1, 9, 10, 13, 15, 20, 23);
+      T1 := Train_Mission (3, 9, 10, 13, 15, 20, 24);
+      T2 := Train_Mission (5, 27, 11, 13, 16, 20, 25);
+      T3 := Train_Mission (7, 27, 11, 13, 16, 20, 26);
+      T4 := Train_Mission (23, 22, 17, 18, 11, 9, 2);
+      T5 := Train_Mission (24, 22, 17, 18, 11, 9, 4);
+      T6 := Train_Mission (25, 22, 17, 18, 12, 27, 6);
+      T7 := Train_Mission (26, 22, 17, 18, 12, 27, 8);
+      -- ----- region A: train constraints ------
+      --   [0, 0, 0, 1, 0,-1, 0]  -- A0
+      --   [0, 0, 0, 1, 0,-1, 0]  -- A1
+      --   [0, 0, 1,-1, 0, 1, 0]  -- A2
+      --   [0, 0, 1,-1, 0, 0, 0]  -- A3
+      --   [0, 1, 0, 0, 0,-1, 0]  -- A4
+      --   [0, 1, 0, 0, 0,-1, 0]  -- A5
+      --   [1, 0, 0, 0,-1, 0, 0]  -- A6
+      --   [0, 1, 0, 0,-1, 0, 0]  -- A7
+      -- ----------------------------------------
+      A0 := Train_Constraint (0, 0, 0, 1, 0,-1, 0);
+      A1 := Train_Constraint (0, 0, 0, 1, 0,-1, 0);
+      A2 := Train_Constraint (0, 0, 1,-1, 0, 1, 0);
+      A3 := Train_Constraint (0, 0, 1,-1, 0, 0, 0);
+      A4 := Train_Constraint (0, 1, 0, 0,-1, 0, 0);
+      A5 := Train_Constraint (0, 1, 0, 0,-1, 0, 0);
+      A6 := Train_Constraint (0, 0, 0,-1, 0, 0, 0);
+      A7 := Train_Constraint (0, 1, 0,-1, 0, 0, 0);
+      -- ----- region B: train constraints ------
+      --   [0, 0, 0, 1, 0,-1, 0]  -- B0
+      --   [0, 0, 0, 1, 0,-1, 0]  -- B1
+      --   [0, 0, 1,-1, 0, 0, 0]  -- B2
+      --   [0, 0, 1,-1, 0, 1, 0]  -- B3
+      --   [0, 1, 0, 0, 0,-1, 0]  -- B4
+      --   [0, 1, 0, 0, 0,-1, 0]  -- B5
+      --   [0, 1, 0, 0,-1, 0, 0]  -- B6
+      --   [1, 0, 0, 0,-1, 0, 0]  -- B7
+      -- ----------------------------------------
+      B0 := Train_Constraint (0, 0, 0, 1, 0,-1, 0);
+      B1 := Train_Constraint (0, 0, 0, 1, 0,-1, 0);
+      B2 := Train_Constraint (0, 0, 1,-1, 0, 0, 0);
+      B3 := Train_Constraint (0, 0, 1,-1, 0, 1, 0);
+      B4 := Train_Constraint (0, 1, 0, 0, 0,-1, 0);
+      B5 := Train_Constraint (0, 1, 0, 0, 0,-1, 0);
+      B6 := Train_Constraint (0, 1, 0,-1, 0, 0, 0);
+      B7 := Train_Constraint (1, 0, 0,-1, 0, 0, 0);
+      par
+         ENTER -> Ra [raenter => ENTER]
+      ||
+         ENTER -> Rb [rbenter => ENTER]
+      ||
+         ENTER, LEAVE ->
+         -- these are PulsedPlaces in the original mCRL2 spec
+         par ENTER, LEAVE in
+            Pulse [tic => ENTER, toc => LEAVE]
+         ||
+            par 
+               EB [ENTER, LEAVE] (1) -- tic|penter -> ppenter
+            || E  [ENTER, LEAVE] (2) 
+            || EB [ENTER, LEAVE] (3)
+            || E  [ENTER, LEAVE] (4)
+            || EB [ENTER, LEAVE] (5)
+            || E  [ENTER, LEAVE] (6)
+            || EB [ENTER, LEAVE] (7)
+            || E  [ENTER, LEAVE] (8)
+            || E  [ENTER, LEAVE] (9)
+            || E  [ENTER, LEAVE] (10)
+            || E  [ENTER, LEAVE] (11)
+            || E  [ENTER, LEAVE] (12)
+            || E  [ENTER, LEAVE] (13)
+            || E  [ENTER, LEAVE] (14)
+            || E  [ENTER, LEAVE] (15)
+            || E  [ENTER, LEAVE] (16)
+            || E  [ENTER, LEAVE] (17)
+            || E  [ENTER, LEAVE] (18)
+            || E  [ENTER, LEAVE] (19)
+            || E  [ENTER, LEAVE] (20)
+            || E  [ENTER, LEAVE] (21)
+            || E  [ENTER, LEAVE] (22)
+            || EB [ENTER, LEAVE] (23)
+            || EB [ENTER, LEAVE] (24)
+            || EB [ENTER, LEAVE] (25)
+            || EB [ENTER, LEAVE] (26)
+            || E  [ENTER, LEAVE] (27)
+            end par
+         end par
+      ||
+         ENTER, LEAVE ->
+         -- these are PulsedTrains in the original mCRL2 spec
+         par ENTER, LEAVE in
+            Pulse [tic => ENTER, toc => LEAVE]
+         ||
+            par ARRIVED in
+               Train [ENTER, LEAVE, ARRIVED] (T0, A0, B0)
+            || Train [ENTER, LEAVE, ARRIVED] (T1, A1, B1)
+            || Train [ENTER, LEAVE, ARRIVED] (T2, A2, B2)
+            || Train [ENTER, LEAVE, ARRIVED] (T3, A3, B3)
+            || Train [ENTER, LEAVE, ARRIVED] (T4, A4, B4)
+            || Train [ENTER, LEAVE, ARRIVED] (T5, A5, B5)
+            || Train [ENTER, LEAVE, ARRIVED] (T6, A6, B6)
+            || Train [ENTER, LEAVE, ARRIVED] (T7, A7, B7)
+            end par
+         end par
+      end par
+   end var
+end process
+
+end module
+
+-- lnt.open para1.lnt  generator -monitor x
+-- real	6m39.535s
+-- user	6m33.199s
+-- sys	0m4.186s
+
+--
+-- bcg_info x.bcg
+-- ./x.bcg:
+-- created by generator
+-- 	8770729 states
+-- 	14268385 transitions
+-- 	49 labels
+-- 	initial state: 0
+-- 	no deadlock state
+-- 	branching factor: average = 1.63, minimal = 1, maximal = 8
+-- 	no transition with a hidden label ("i")
+-- 	non-deterministic behavior for:
+-- 	   label "ENTER !22 !+1 !+1" at state(s): 0 12 13 14 15 67 80 ...(30505 states in total)
+-- 	   label "ENTER !27 !+0 !+0" at state(s): 0 9 10 11 14 15 16 ...(152006 states in total)
+-- 	   label "ENTER !9 !+0 !+0" at state(s): 0 9 10 11 12 13 16 ... (36060 states in total)
+-- 
+-- time bcg_open x.bcg evaluator4 arrived.mcl
+-- > 
+-- > TRUE
+-- > 
+-- > real	15m30.253s
+-- > user	15m21.597s
+-- > sys	0m6.158s
+-- > 
+--
+--
+-- lnt.open para1.lnt evaluator4 -diag arrived.mcl 
+--

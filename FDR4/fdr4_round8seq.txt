@@ -1,0 +1,230 @@
+
+T0 = < 1, 9,10,13,15,20,23,22,17,18,11, 9, 2, 1>
+T1 = < 3, 9,10,13,15,20,24,22,17,18,11, 9, 4, 3>
+T2 = < 5,27,11,13,16,20,25,22,17,18,12,27, 6, 5>
+T3 = < 7,27,11,13,16,20,26,22,17,18,12,27, 8, 7>
+T4 = <23,22,17,18,11, 9, 2, 1, 9,10,13,15,20,23>
+T5 = <24,22,17,18,11, 9, 4, 3, 9,10,13,15,20,24>
+T6 = <25,22,17,18,12,27, 6, 5,27,11,13,16,20,25>
+T7 = <26,22,17,18,12,27, 8, 7,27,11,13,16,20,26>
+
+
+  ------ region A: train constraints ------
+A0 = < 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0> -- G1
+A1 = < 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0> -- R1
+A2 = < 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0> -- Y1
+A3 = < 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0> -- B1
+A4 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0> -- G2
+A5 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0> -- R2
+A6 = < 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0> -- Y2
+A7 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0> -- B2 
+ ------------------------------------------
+
+  ------- region B: train constraints ------
+B0 = < 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0> -- G1
+B1 = < 0, 0, 0, 1, 0,-1, 0, 1, 0, 0,-1, 0, 0, 0> -- R1
+B2 = < 0, 0, 1,-1, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0> -- Y1
+B3 = < 0, 0, 1,-1, 0, 1, 0, 0, 0,-1, 0, 0, 0, 0> -- B1
+B4 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0> -- G2
+B5 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0,-1, 0> -- R2
+B6 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 0, 0> -- Y2
+B7 = < 0, 0, 0,-1, 0, 0, 0, 0, 0, 1,-1, 0, 1, 0> -- B2
+  ------------------------------------------
+ 
+
+  ------- region C: train constraints ------
+C0 = < 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0> -- G1
+C1 = < 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0> -- R1
+C2 = < 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0> -- Y1
+C3 = < 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0> -- B1
+C4 = < 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0> -- G2
+C5 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0> -- R2
+C6 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0> -- Y2
+C7 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0> -- B2
+  ------------------------------------------
+
+  ------- region D: train constraints ------
+D0 = < 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0> -- G1
+D1 = < 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,-1, 0, 0, 0> -- R1
+D2 = < 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0> -- Y1
+D3 = < 0, 0, 1, 0, 0,-1, 0, 1, 0,-1, 0, 0, 0, 0> -- B1
+D4 = < 0, 1, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0> -- G2
+D5 = < 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 1, 0> -- R2
+D6 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0> -- Y2
+D7 = < 0, 1, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0> -- B2
+  ------------------------------------------
+LA = 7
+LB = 7
+LC = 7
+LD = 7
+
+el(y,x) = if x==0 then head(y) else el(tail(y),x-1)
+
+channel move:{0..7}.{1..27}.{1..27}
+-- channel move
+channel  arrived
+
+AllTrains (P0, P1, P2, P3, P4, P5, P6, P7, RA, RB, RC, RD) = 
+     (P0 < 13 and    --  train0 has not yet reached all the steps of its mission
+      el(T0,P0+1) != el(T1,P1)  and -- next place of train0 not occupied by train1
+      el(T0,P0+1) != el(T2,P2)  and -- next place of train0 not occupied by train2
+      el(T0,P0+1) != el(T3,P3)  and
+      el(T0,P0+1) != el(T4,P4)  and
+      el(T0,P0+1) != el(T5,P5)  and
+      el(T0,P0+1) != el(T6,P6)  and
+      el(T0,P0+1) != el(T7,P7)  and -- next place of train0 not occupied by train7
+      RA + el(A0,P0+1) <= LA and   
+      RB + el(B0,P0+1) <= LB and   
+      RC + el(C0,P0+1) <= LC and   
+      RD + el(D0,P0+1) <= LD 
+     )  &
+       move!0!el(T0,P0)!el(T0,P0+1) -> AllTrains(P0+1,P1,P2,P3,P4,P5,P6,P7,
+                RA+el(A0,P0+1),RB+el(B0,P0+1),RC+el(C0,P0+1),RD+el(D0,P0+1))
+     []
+     (P1 < 13 and
+      el(T1,P1+1) != el(T0,P0)  and
+      el(T1,P1+1) != el(T2,P2)  and
+      el(T1,P1+1) != el(T3,P3)  and
+      el(T1,P1+1) != el(T4,P4)  and
+      el(T1,P1+1) != el(T5,P5)  and
+      el(T1,P1+1) != el(T6,P6)  and
+      el(T1,P1+1) != el(T7,P7)  and
+      RA + el(A1,P1+1) <= LA and    
+      RB + el(B1,P1+1) <= LB and    
+      RC + el(C1,P1+1) <= LC and    
+      RD + el(D1,P1+1) <= LD
+     )  &
+       move!1!el(T1,P1)!el(T1,P1+1) -> AllTrains(P0,P1+1,P2,P3,P4,P5,P6,P7,
+                RA+el(A0,P1+1),RB+el(B1,P1+1),RC+el(C1,P1+1),RD+el(D1,P1+1))
+     []
+     (P2 < 13 and
+      el(T2,P2+1) != el(T0,P0)  and
+      el(T2,P2+1) != el(T1,P1)  and
+      el(T2,P2+1) != el(T3,P3)  and
+      el(T2,P2+1) != el(T4,P4)  and
+      el(T2,P2+1) != el(T5,P5)  and
+      el(T2,P2+1) != el(T6,P6)  and
+      el(T2,P2+1) != el(T7,P7)  and
+      RA + el(A2,P2+1) <= LA and    
+      RB + el(B2,P2+1) <= LB and    
+      RC + el(C2,P2+1) <= LC and    
+      RD + el(D2,P2+1) <= LD
+     )  &
+       move!2!el(T2,P2)!el(T2,P2+1) -> AllTrains(P0,P1,P2+1,P3,P4,P5,P6,P7,
+                RA+el(A2,P2+1),RB+el(B2,P2+1),RC+el(C2,P2+1),RD+el(D2,P2+1))
+     []
+     (P3 < 13 and
+      el(T3,P3+1) != el(T0,P0)  and
+      el(T3,P3+1) != el(T1,P1)  and
+      el(T3,P3+1) != el(T2,P2)  and
+      el(T3,P3+1) != el(T4,P4)  and
+      el(T3,P3+1) != el(T5,P5)  and
+      el(T3,P3+1) != el(T6,P6)  and
+      el(T3,P3+1) != el(T7,P7)  and
+      RA + el(A3,P3+1) <= LA and    
+      RB + el(B3,P3+1) <= LB and    
+      RC + el(C3,P3+1) <= LC and    
+      RD + el(D3,P3+1) <= LD
+     )  &
+       move!3!el(T3,P3)!el(T3,P3+1) -> AllTrains(P0,P1,P2,P3+1,P4,P5,P6,P7,
+                RA+el(A3,P3+1),RB+el(B3,P3+1),RC+el(C3,P3+1),RD+el(D3,P3+1))
+     []
+     (P4 < 13 and
+      el(T4,P4+1) != el(T0,P0)  and
+      el(T4,P4+1) != el(T1,P1)  and
+      el(T4,P4+1) != el(T2,P2)  and
+      el(T4,P4+1) != el(T3,P3)  and
+      el(T4,P4+1) != el(T5,P5)  and
+      el(T4,P4+1) != el(T6,P6)  and
+      el(T4,P4+1) != el(T7,P7)  and
+      RA + el(A4,P4+1) <= LA and    
+      RB + el(B4,P4+1) <= LB and    
+      RC + el(C4,P4+1) <= LC and    
+      RD + el(D4,P4+1) <= LD
+     )  &
+       move!4!el(T4,P4)!el(T4,P4+1) -> AllTrains(P0,P1,P2,P3,P4+1,P5,P6,P7,
+                RA+el(A4,P4+1),RB+el(B4,P4+1),RC+el(C4,P4+1),RD+el(D4,P4+1))
+     []
+     (P5 < 13 and
+      el(T5,P5+1) != el(T0,P0)  and
+      el(T5,P5+1) != el(T1,P1)  and
+      el(T5,P5+1) != el(T2,P2)  and
+      el(T5,P5+1) != el(T3,P3)  and
+      el(T5,P5+1) != el(T4,P4)  and
+      el(T5,P5+1) != el(T6,P6)  and
+      el(T5,P5+1) != el(T7,P7)  and
+      RA + el(A5,P5+1) <= LA and    
+      RB + el(B5,P5+1) <= LB and    
+      RC + el(C5,P5+1) <= LC and    
+      RD + el(D5,P5+1) <= LD
+     )  &
+       move!5!el(T5,P5)!el(T5,P5+1) -> AllTrains(P0,P1,P2,P3,P4,P5+1,P6,P7,
+                RA+el(A5,P5+1),RB+el(B5,P5+1),RC+el(C5,P5+1),RD+el(D5,P5+1))
+     []
+     (P6 < 13 and
+      el(T6,P6+1) != el(T0,P0)  and
+      el(T6,P6+1) != el(T1,P1)  and
+      el(T6,P6+1) != el(T2,P2)  and
+      el(T6,P6+1) != el(T3,P3)  and
+      el(T6,P6+1) != el(T4,P4)  and
+      el(T6,P6+1) != el(T5,P5)  and
+      el(T6,P6+1) != el(T7,P7)  and
+      RA + el(A6,P6+1) <= LA and    
+      RB + el(B6,P6+1) <= LB and    
+      RC + el(C6,P6+1) <= LC and    
+      RD + el(D6,P6+1) <= LD
+     )  &
+       move!6!el(T6,P6)!el(T6,P6+1) -> AllTrains(P0,P1,P2,P3,P4,P5,P6+1,P7,
+                RA+el(A6,P6+1),RB+el(B6,P6+1),RC+el(C6,P6+1),RD+el(D6,P6+1))
+     []
+     (P7 < 13 and
+      el(T7,P7+1) != el(T0,P0)  and
+      el(T7,P7+1) != el(T1,P1)  and
+      el(T7,P7+1) != el(T2,P2)  and
+      el(T7,P7+1) != el(T3,P3)  and
+      el(T7,P7+1) != el(T4,P4)  and
+      el(T7,P7+1) != el(T5,P5)  and
+      el(T7,P7+1) != el(T6,P6)  and
+      RA + el(A7,P7+1) <= LA and    
+      RB + el(B7,P7+1) <= LB and    
+      RC + el(C7,P7+1) <= LC and    
+      RD + el(D7,P7+1) <= LD
+     )  &
+       move!7!el(T7,P7)!el(T7,P7+1) -> AllTrains(P0,P1,P2,P3,P4,P5,P6,P7+1,
+                RA+el(A7,P7+1),RB+el(B7,P7+1),RC+el(C7,P7+1),RD+el(D7,P7+1))
+     []
+     ((P0 ==13) and (P1 ==13) and (P2 ==13) and (P3 ==13)  and 
+      (P4 ==13) and (P5 ==13) and (P6 ==13) and (P7 ==13)
+     ) &
+       arrived -> AllTrains (P0, P1, P2, P3, P4, P5, P6, P7, RA, RB, RC, RD)
+
+--------------------------
+ASYS = AllTrains(0,0,0,0,0,0,0,0, 1,1,1,1)\{|move|}
+--------------------------
+--  compression is helpful for two verifications/visualization
+-- NSYS = normal(ASYS)
+-- assert SPEC [FD= NSYS
+--------------------------
+
+
+--------------------------
+SPEC = arrived -> STOP
+--------------------------
+
+assert SPEC [FD= ASYS
+
+-- -------- verfication process : ---------------
+--  time refines --refinement-storage-file-path swapdir fdr4_round8seq.txt
+-- > 
+-- >   SLOWER THEN PARALLEL VERSION
+
+-- >
+-- > 
+-- time FDR4.app/Contents/MacOS/refines fdr4_round8seq.txt.txt
+--  time refines --reveal-taus fdr4_round8ko.txt 
+-------------------------------------------------------
+--  8 trains:  
+
+
+
+
